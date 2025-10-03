@@ -30,7 +30,7 @@ except OSError as e:
     raise RuntimeError(f"Failed to create cache directory {cache_dir}: {str(e)}")
 
 # Login to Hugging Face Hub
-hf_token = os.environ("HF_TOKEN")
+hf_token = os.environ.get("HF_TOKEN")
 if not hf_token:
     raise ValueError("Hugging Face token not found in environment variables.")
 login(hf_token)
