@@ -5,6 +5,12 @@ import transformers
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from huggingface_hub import login
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 
 app = FastAPI(title="Translation API", description="API for translating text using Sunbird NLLB model")
 
@@ -16,6 +22,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Login to Hugging Face Hub
+hf_token = os.getenv("HF_TOKEN")
+if not hf_token:
+    raise ValueError("Hugging Face token not found in environment variables.")
+login(hf_token)
 
 # Define request body model
 class TranslationRequest(BaseModel):
@@ -43,6 +55,8 @@ language_tokens = {
 # Set device to CPU for cloud deployment
 device = torch.device("cpu")
 model = model.to(device)
+
+
 
 @app.post("/translate", response_model=dict)
 async def translate_text(request: TranslationRequest):
