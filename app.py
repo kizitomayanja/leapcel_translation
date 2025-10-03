@@ -23,8 +23,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Set Hugging Face cache directory to a writable location
-os.environ["HF_HOME"] = "/tmp/huggingface_cache"
+# Set Hugging Face cache directory to a writable location and create it
+cache_dir = "/tmp/huggingface_cache"
+os.environ["HF_HOME"] = cache_dir
+try:
+    os.makedirs(cache_dir, exist_ok=True)
+except OSError as e:
+    raise RuntimeError(f"Failed to create cache directory {cache_dir}: {str(e)}")
 
 # Login to Hugging Face Hub
 hf_token = os.getenv("HF_TOKEN")
