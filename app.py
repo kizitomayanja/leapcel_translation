@@ -23,6 +23,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Set Hugging Face cache directory to a writable location
+os.environ["HF_HOME"] = "/tmp/huggingface_cache"
+
 # Login to Hugging Face Hub
 hf_token = os.getenv("HF_TOKEN")
 if not hf_token:
@@ -38,7 +41,7 @@ class TranslationRequest(BaseModel):
 # Load the model and tokenizer (non-quantized for CPU compatibility)
 model = transformers.M2M100ForConditionalGeneration.from_pretrained(
     "Sunbird/translate-nllb-1.3b-salt",
-    torch_dtype=torch.float32
+    dtype=torch.float32
 )
 tokenizer = transformers.NllbTokenizer.from_pretrained("Sunbird/translate-nllb-1.3b-salt")
 
