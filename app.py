@@ -6,10 +6,8 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from huggingface_hub import login
-from dotenv import load_dotenv
 import os
 
-load_dotenv()
 
 
 app = FastAPI(title="Translation API", description="API for translating text using Sunbird NLLB model")
@@ -32,7 +30,7 @@ except OSError as e:
     raise RuntimeError(f"Failed to create cache directory {cache_dir}: {str(e)}")
 
 # Login to Hugging Face Hub
-hf_token = os.getenv("HF_TOKEN")
+hf_token = os.environ("HF_TOKEN")
 if not hf_token:
     raise ValueError("Hugging Face token not found in environment variables.")
 login(hf_token)
